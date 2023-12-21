@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
@@ -12,22 +14,37 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class RegistrationTest {
 
+    public String generateDate(int days) {
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    String planningDate = generateDate(5);
+
+    public String generateDate2(int days) {
+        return LocalDate.now().minusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+    String planningDateNegative = generateDate2(5);
     @Test
     void shouldTestV1() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("+79012345678");
         $("[data-test-id=agreement]").click();
         $$("button").get(1).click();
         $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content")
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15))
+                .shouldBe(Condition.visible);
     }
     @Test
     void shouldTestV2() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Минск");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("+79012345678");
         $("[data-test-id=agreement]").click();
@@ -38,7 +55,8 @@ public class RegistrationTest {
     void shouldTestV3() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Nick Smith");
         $("[data-test-id=phone] input").setValue("+79012345678");
         $("[data-test-id=agreement]").click();
@@ -49,7 +67,8 @@ public class RegistrationTest {
     void shouldTestV4() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("");
         $("[data-test-id=phone] input").setValue("+79012345678");
         $("[data-test-id=agreement]").click();
@@ -61,7 +80,8 @@ public class RegistrationTest {
     void shouldTestV5() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("+79012345678");
         $("[data-test-id=agreement]").click();
@@ -72,7 +92,8 @@ public class RegistrationTest {
     void shouldTestV6() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("79012345678");
         $("[data-test-id=agreement]").click();
@@ -84,7 +105,8 @@ public class RegistrationTest {
     void shouldTestV7() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("");
         $("[data-test-id=agreement]").click();
@@ -95,7 +117,7 @@ public class RegistrationTest {
     @Test
     void shouldTestV8() throws InterruptedException {
         open("http://localhost:7777");
-        $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a", Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.BACK_SPACE);
         $("[data-test-id=city] input").setValue("Казань");
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("+79012345678");
@@ -110,7 +132,7 @@ public class RegistrationTest {
     void shouldTestV9() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id='date'] input").sendKeys(Keys.CONTROL + "a", Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").sendKeys("1", "2", ".", "1", "2", ".", "2", "0", "2", "3");
+        $("[data-test-id=date] input").setValue(planningDateNegative);
 
         $("[data-test-id=city] input").setValue("Казань");
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
@@ -124,7 +146,8 @@ public class RegistrationTest {
     void shouldTestV10() throws InterruptedException {
         open("http://localhost:7777");
         $("[data-test-id=city] input").setValue("Казань");
-        $("[data-test-id=date] input").setValue("23.12.2023");
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id=date] input").setValue(planningDate);
         $("[data-test-id=name] input").setValue("Карпенко Надежда");
         $("[data-test-id=phone] input").setValue("+79012345678");
 
